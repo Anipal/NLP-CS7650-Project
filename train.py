@@ -36,14 +36,16 @@ num_epochs = config.epochs
 run_id = config.run_id
 # setup logging and the results directory for the current run
 writer, best_model_path = setup_logging(config)
-
-
+best_f1_val = 0.0
+best_acc_val = 0.0
+best_f1_train = 0.0
+best_acc_train = 0.0
 # yet to edit after this
 for epoch in range(num_epochs):
     running_loss_train = 0.0
     gtLabelsList = []
     predictedLabelsList = []
-
+    model.train()
     for i, data in enumerate(train_dataloader, 0):
         inputImg, inputTxt, labels = data
 
@@ -70,14 +72,6 @@ for epoch in range(num_epochs):
 
     if(accuracy_train>best_acc_train):
       best_acc_train = accuracy_train
-      torch.save({
-          'epoch': epoch,
-          'model_state_dict': model.state_dict(),
-          'optimizer_state_dict': optimizer.state_dict(),
-          'loss_train':running_loss_train/len(train_dataloader),
-          'accuracy_train':accuracy_train,
-          'f1_train':f1_train, 
-          }, best_model_path)
 
     writer.add_scalar("Loss/train", running_loss_train/len(train_dataloader), epoch)
     writer.add_scalar("Accuracy/train", accuracy_train , epoch)
@@ -85,7 +79,54 @@ for epoch in range(num_epochs):
 
     print(f"EPOCH:{epoch} TRAIN f1:{f1_train:.2f}, accuracy:{accuracy_train:.2f}")
 
+    if(epoch%2==0):
+        running_loss_val = 0.0
+        gtLabelsList = []
+        predictedLabelsList = []
+        model.eval()
+        with torch.no_grad():
+            for i, data in enumerate(val_dataloader, 0):
+                inputImg, inputTxt, labels = data
+
+                outputs = model(inputImg, inputTxt).squeeze()
+                outputLabels = torch.argmax(outputs, dim=1)
+                loss_val = criterion(outputs, labels)
+                running_loss_val += loss_val.item()
+                predictedLabelsList.append(int(outputLabels.detach().cpu().numpy()))
+                gtLabelsList.append(int(labels.detach().cpu().numpy()))
+
+
+            
+            f1_val = f1_score(predictedLabelsList, gtLabelsList, average = 'weighted')
+            accuracy_val = accuracy_score(predictedLabelsList, gtLabelsList)
+
+            
+            if(accuracy_val > best_acc_val):
+            
+                best_acc_val = accuracy_val
+                torch.save({
+                    'epoch': epoch,
+                    'model_state_dict': model.state_dict(),
+                    'optimizer_state_dict': optimizer.state_dict(),
+                    'loss_train':running_loss_train/len(train_dataloader),
+                    'accuracy_train':accuracy_train,
+                    'f1_train':f1_train, 
+                    'loss_val':running_loss_val/len(val_dataloader),
+                    'accuracy_val':accuracy_val,
+                    'f1_val':f1_val
+                    }, best_model_path)
+                    
+            writer.add_scalar("Loss/val", running_loss_val/len(val_dl), epoch)
+            writer.add_scalar("Accuracy/val", accuracy_val , epoch)
+            writer.add_scalar("F1/val", f1_val , epoch)
+            print(f"\n VAL f1:{f1_val:.2f}, accuracy:{accuracy_val:.2f}\n")
+
+            if(f1_val>best_f1_val):
+                best_f1_val = f1_val
+
 print('Training finished')
 
 print(f"Best F1 Train score:{best_f1_train:.2f}")
 print(f"Best Acc Train score:{best_acc_train:.2f}")
+print(f"Best F1 Test score:{best_f1_val:.2f}")
+print(f"Best Acc Test score:{best_acc_val:.2f}")

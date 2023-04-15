@@ -9,11 +9,11 @@ from torch import nn
 from sklearn.metrics import f1_score, accuracy_score
 
 
-parser = argparse.ArgumentParser(description='VQA-RAD training')
+parser = argparse.ArgumentParser(description='VQA-RAD testing')
 parser.add_argument('--config_path', type=str, default='config.yaml',help='path to config file')
 args = parser.parse_args()
 
-# config settings -- later move to main.py where we can call train.py
+# config settings -- later move to main.py where we can call test.py
 module_dir = os.path.dirname(__file__)
 config_path = os.path.join(module_dir, args.config_path)
 with open(config_path, 'r') as f:
@@ -40,16 +40,10 @@ predictedLabelsList = []
 
 model.eval()
 with torch.no_grad:
-    for i, data in enumerate(train_dataloader, 0):
+    for i, data in enumerate(test_dataloader, 0):
         inputImg, inputTxt, labels = data
 
         outputs = model(inputImg, inputTxt).squeeze()
-
-        loss_train = criterion(outputs, labels)
-        loss_train.backward()
-        optimizer.step()
-
-        running_loss_train += loss_train.item()
 
         outputLabels = torch.argmax(outputs, dim=1)
         
