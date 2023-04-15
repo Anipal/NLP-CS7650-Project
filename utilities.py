@@ -28,8 +28,8 @@ class objectview(object):
         self.__dict__ = d
 
 def setup_logging(config):
-    run_id  = str(int(time.time())%1e7)
-    save_path = os.path.join(config.results_folder, config.experiment_name, "runs", run_id)
+    # run_id  = str(int(time.time())%1e7)
+    save_path = os.path.join(config.results_folder, config.experiment_name, "runs", config.run_id)
 
     logs_path   = os.path.join(save_path, "logs")
     models_path = os.path.join(save_path, "models")
@@ -37,7 +37,7 @@ def setup_logging(config):
     os.makedirs(models_path)
 
     writer = SummaryWriter(logs_path)
-    best_model = models_path +'best.pth'
+    best_model = models_path +'/best.pth'
 
     return writer, best_model
 
