@@ -30,11 +30,13 @@ class objectview(object):
 def setup_logging(config):
     # run_id  = str(int(time.time())%1e7)
     save_path = os.path.join(config.results_folder, config.experiment_name, "runs", str(config.run_id))
-
+    
     logs_path   = os.path.join(save_path, "logs")
     models_path = os.path.join(save_path, "models")
-    os.makedirs(logs_path)
-    os.makedirs(models_path)
+    if not(os.path.exists(logs_path)):
+        os.makedirs(logs_path)
+    if not(os.path.exists(models_path)):
+        os.makedirs(models_path)
 
     writer = SummaryWriter(logs_path)
     best_model = models_path +'/best.pth'
