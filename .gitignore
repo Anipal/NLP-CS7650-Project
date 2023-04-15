@@ -69,3 +69,5 @@ target/
 
 results
 embeddings
+
+.DS_Store
