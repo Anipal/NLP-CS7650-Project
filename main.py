@@ -11,7 +11,7 @@ from torch.utils.data import Dataset, DataLoader
 from torch import nn
 from transformers import BertModel, BertTokenizer
 from sklearn.metrics import f1_score, accuracy_score
-from torch.utils.tensorboard import SummaryWriter
+from torch.utils.tensorboard import SummaryWriter       # a_embedding = torch.mean(a_encoded_sequence, dim=1)
 
 q_path = 'vqa_rad/baseline/embeddings/questions'
 img_path = 'vqa_rad/baseline/embeddings/images'

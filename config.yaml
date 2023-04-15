@@ -1,0 +1,8 @@
+train      : "./data/trainset.json"
+test       : "./data/testset.json"
+images     : "./data/images"
+language_model_name : "emilyalsentzer/Bio_ClinicalBERT"
+vision_model_name : "convnext_base"
+
+language_embeddings_folder : "./embeddings/language"
+vision_embeddings_folder: "./embeddings/vision"
