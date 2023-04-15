@@ -92,9 +92,8 @@ for epoch in range(num_epochs):
                 outputLabels = torch.argmax(outputs, dim=1)
                 loss_val = criterion(outputs, labels)
                 running_loss_val += loss_val.item()
-                predictedLabelsList.append(int(outputLabels.detach().cpu().numpy()))
-                gtLabelsList.append(int(labels.detach().cpu().numpy()))
-
+                predictedLabelsList.extend(list(outputLabels.detach().cpu().numpy()))
+                gtLabelsList.extend(list(labels.detach().cpu().numpy()))
 
             
             f1_val = f1_score(predictedLabelsList, gtLabelsList, average = 'weighted')
