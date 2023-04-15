@@ -1,4 +1,4 @@
-from utilities import objectview, setup_logging
+from utilities import objectview, setup_logging, set_seed
 from model import SimpleClassifier
 from dataset import VQADataset
 from torch.utils.data import DataLoader
@@ -6,14 +6,18 @@ import yaml
 import os
 import argparse
 import torch
+import random
+import numpy as np
 from torch import nn
 from sklearn.metrics import f1_score, accuracy_score
+
 
 
 parser = argparse.ArgumentParser(description='VQA-RAD training')
 parser.add_argument('--config_path', type=str, default='config.yaml',help='path to config file')
 args = parser.parse_args()
 
+set_seed(0)
 # config settings -- later move to main.py where we can call train.py
 module_dir = os.path.dirname(__file__)
 config_path = os.path.join(module_dir, args.config_path)
