@@ -7,10 +7,10 @@
 
 ## Changing the config
 ```
-# parameters that can be changed
-language_model_name : "emilyalsentzer/Bio_ClinicalBERT"
-vision_model_name : "convnext_base"
-experiment_name: "bioclinicalBERT_convnext"
+    # parameters that can be changed
+    language_model_name : "emilyalsentzer/Bio_ClinicalBERT"
+    vision_model_name : "convnext_base"
+    experiment_name: "bioclinicalBERT_convnext"
 ```
 
 ## Training
