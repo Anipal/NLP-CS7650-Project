@@ -41,7 +41,7 @@ gtLabelsList = []
 predictedLabelsList = []
 
 model.eval()
-with torch.no_grad:
+with torch.no_grad():
     for i, data in enumerate(test_dataloader, 0):
         inputImg, inputTxt, labels = data
 
