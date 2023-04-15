@@ -6,8 +6,6 @@ import yaml
 import os
 import argparse
 import torch
-import random
-import numpy as np
 from torch import nn
 from sklearn.metrics import f1_score, accuracy_score
 
