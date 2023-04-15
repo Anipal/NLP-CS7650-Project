@@ -1,29 +1,18 @@
-from torch.utils.data import Dataset, DataLoader
+from torch.utils.data import Dataset
 from embeddings import *
-import json
-import pickle
-
-
-def load_file(path):
-    extension = path.split('.')[-1]
-    if extension not in [ "json", "pkl" ]:
-        print("File type not supported")
-        exit()
-
-    data_path = open(path)
-
-    if extension == "json":
-        data = json.load( data_path )
-    elif extension == "pkl":
-        data = pickle.load( data_path )
-    
-    print("Loading :", path)
-    return data
-    
+from utilities import *    
 
 class VQADataset(Dataset):
-    def __init__(self, data, config):
-        self.data = data
+    def __init__(self, config, type = "train"):
+        if type not in ["train", "val", "test"]:
+            print("Incorrect type for dataloader.")
+            exit()
+        
+        if type=="train":
+            self.data = load_file(config.train_dataloader)
+        elif type=="test":
+            self.data = load_file(config.test_dataloader)
+
         self.config = config
         generate_language_embeddings(config)
         generate_vision_embeddings(config)
@@ -32,12 +21,12 @@ class VQADataset(Dataset):
         return len(self.data)
     
     def __getitem__(self, idx):
-        data = self.data[idx]
+        data   = self.data[idx]
         img_id = data['image_name']
-        q_id = data['qid']
+        q_id   = data['qid']
 
-        q_feat = torch.load(f"./vqa_rad/biomed_roberta_convnext/embeddings/questions/{q_id}.pt")
-        img_feat = torch.load(f"./vqa_rad/biomed_roberta_convnext/embeddings/images/{img_id}.pt")
+        q_feat   = torch.load(os.path.join( self.config.language_embeddings_folder, self.config.language_model_name, f'{q_id}.pt' ))
+        img_feat = torch.load(os.path.join( self.config.vision_embeddings_folder, self.config.vision_model_name, f'{img_id}.pt' ))
         label = data['labels'][0]
 
-        return img_feat.cuda(), q_feat.cuda(), torch.tensor(label, dtype=torch.long).cuda()
+        return img_feat.to(self.config.device), q_feat.to(self.config.device), torch.tensor(label, dtype=torch.long).to(self.config.device)

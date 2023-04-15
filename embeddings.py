@@ -1,6 +1,6 @@
 from transformers import AutoTokenizer, AutoModel
 import torch
-from dataset import load_file
+from utilities import load_file
 from tqdm import tqdm
 import yaml
 import os
