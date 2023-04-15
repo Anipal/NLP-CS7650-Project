@@ -26,7 +26,7 @@ config.device = torch.device('cuda') if torch.cuda.is_available() else torch.dev
 train_ds = VQADataset(config, type = "train")
 val_ds = VQADataset(config, type = "val")
 train_dataloader = DataLoader(train_ds, batch_size=128, shuffle=True)
-val_dataloader = DataLoader(val_ds, batch_size=1, shuffle=False)
+val_dataloader = DataLoader(val_ds, batch_size=128, shuffle=False)
 
 # model and optimizer -- add these to config to run experiments easily
 model = SimpleClassifier().to(config.device)
@@ -89,7 +89,7 @@ for epoch in range(num_epochs):
                 inputImg, inputTxt, labels = data
 
                 outputs = model(inputImg, inputTxt).squeeze()
-                outputLabels = torch.argmax(outputs, dim=0)
+                outputLabels = torch.argmax(outputs, dim=1)
                 loss_val = criterion(outputs, labels)
                 running_loss_val += loss_val.item()
                 predictedLabelsList.append(int(outputLabels.detach().cpu().numpy()))
