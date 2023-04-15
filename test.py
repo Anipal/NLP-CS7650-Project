@@ -54,7 +54,7 @@ with torch.no_grad():
             gtLabelsList.append(int(labels.detach().cpu().numpy()))
 
 f1_test = f1_score(predictedLabelsList, gtLabelsList, average = 'weighted')
-accuracy_test = accuracy_score(predictedLabelsList, gtLabelsList)
+acc_test = accuracy_score(predictedLabelsList, gtLabelsList)
 
 print('Testing finished')
 
