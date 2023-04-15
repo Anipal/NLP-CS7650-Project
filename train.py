@@ -115,7 +115,7 @@ for epoch in range(num_epochs):
                     'f1_val':f1_val
                     }, best_model_path)
                     
-            writer.add_scalar("Loss/val", running_loss_val/len(val_dl), epoch)
+            writer.add_scalar("Loss/val", running_loss_val/len(val_dataloader), epoch)
             writer.add_scalar("Accuracy/val", accuracy_val , epoch)
             writer.add_scalar("F1/val", f1_val , epoch)
             print(f"\n VAL f1:{f1_val:.2f}, accuracy:{accuracy_val:.2f}\n")
