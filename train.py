@@ -89,7 +89,7 @@ for epoch in range(num_epochs):
                 inputImg, inputTxt, labels = data
 
                 outputs = model(inputImg, inputTxt).squeeze()
-                outputLabels = torch.argmax(outputs, dim=1)
+                outputLabels = torch.argmax(outputs, dim=0)
                 loss_val = criterion(outputs, labels)
                 running_loss_val += loss_val.item()
                 predictedLabelsList.append(int(outputLabels.detach().cpu().numpy()))

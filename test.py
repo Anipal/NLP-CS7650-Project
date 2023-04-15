@@ -45,7 +45,7 @@ with torch.no_grad:
 
         outputs = model(inputImg, inputTxt).squeeze()
 
-        outputLabels = torch.argmax(outputs, dim=1)
+        outputLabels = torch.argmax(outputs, dim=0)
         
         predictedLabelsList.append(int(outputLabels.detach().cpu().numpy()))
         gtLabelsList.append(int(labels.detach().cpu().numpy()))
