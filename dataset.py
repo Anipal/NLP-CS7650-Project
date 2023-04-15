@@ -10,6 +10,8 @@ class VQADataset(Dataset):
         
         if type=="train":
             self.data = load_file(config.train_dataloader)
+        elif type = "val":
+            elf.data = load_file(config.val_dataloader) 
         elif type=="test":
             self.data = load_file(config.test_dataloader)
 

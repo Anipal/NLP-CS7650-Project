@@ -4,13 +4,19 @@ from dataset import VQADataset
 from torch.utils.data import DataLoader
 import yaml
 import os
+import argparse
 import torch
 from torch import nn
 from sklearn.metrics import f1_score, accuracy_score
 
+
+parser = argparse.ArgumentParser(description='VQA-RAD training')
+parser.add_argument('--config_path', type=str, default='config.yaml',help='path to config file')
+args = parser.parse_args()
+
 # config settings -- later move to main.py where we can call train.py
 module_dir = os.path.dirname(__file__)
-config_path = os.path.join(module_dir, 'config.yaml')
+config_path = os.path.join(module_dir, args.config_path)
 with open(config_path, 'r') as f:
     config = yaml.safe_load(f)
 config = objectview(config)
@@ -18,7 +24,7 @@ config.device = torch.device('cuda') if torch.cuda.is_available() else torch.dev
 
 #dataset
 train_ds = VQADataset(config, type = "train")
-val_ds = VQADataset(config, type = "test")
+val_ds = VQADataset(config, type = "val")
 train_dataloader = DataLoader(train_ds, batch_size=128, shuffle=True)
 val_dataloader = DataLoader(val_ds, batch_size=1, shuffle=False)
 
@@ -26,8 +32,8 @@ val_dataloader = DataLoader(val_ds, batch_size=1, shuffle=False)
 model = SimpleClassifier().to(config.device)
 criterion = nn.CrossEntropyLoss()
 optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
-num_epochs = 100
-run_id = 6
+num_epochs = config.epochs
+run_id = config.run_id
 # setup logging and the results directory for the current run
 writer, best_model_path = setup_logging(config)
 
@@ -56,7 +62,7 @@ for epoch in range(num_epochs):
         predictedLabelsList.extend(list(outputLabels.detach().cpu().numpy()))
         gtLabelsList.extend(list(labels.detach().cpu().numpy()))
 
-    f1_train = f1_score(predictedLabelsList, gtLabelsList, average = 'micro')
+    f1_train = f1_score(predictedLabelsList, gtLabelsList, average = 'weighted')
     accuracy_train = accuracy_score(predictedLabelsList, gtLabelsList)
 
     if(f1_train>best_f1_train):
