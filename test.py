@@ -44,7 +44,7 @@ model.eval()
 with torch.no_grad():
     for i, data in enumerate(test_dataloader, 0):
         inputImg, inputTxt, labels = data
-        if (type(labels) is int):
+        if not(labels.item() == -1):
 
             outputs = model(inputImg, inputTxt).squeeze()
 
