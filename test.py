@@ -44,13 +44,14 @@ model.eval()
 with torch.no_grad():
     for i, data in enumerate(test_dataloader, 0):
         inputImg, inputTxt, labels = data
+        if (type(labels) is int):
 
-        outputs = model(inputImg, inputTxt).squeeze()
+            outputs = model(inputImg, inputTxt).squeeze()
 
-        outputLabels = torch.argmax(outputs, dim=0)
-        
-        predictedLabelsList.append(int(outputLabels.detach().cpu().numpy()))
-        gtLabelsList.append(int(labels.detach().cpu().numpy()))
+            outputLabels = torch.argmax(outputs, dim=0)
+            
+            predictedLabelsList.append(int(outputLabels.detach().cpu().numpy()))
+            gtLabelsList.append(int(labels.detach().cpu().numpy()))
 
 f1_test = f1_score(predictedLabelsList, gtLabelsList, average = 'weighted')
 accuracy_test = accuracy_score(predictedLabelsList, gtLabelsList)

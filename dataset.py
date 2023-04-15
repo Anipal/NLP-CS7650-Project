@@ -26,9 +26,13 @@ class VQADataset(Dataset):
         data   = self.data[idx]
         img_id = data['image_name']
         q_id   = data['qid']
-
+        
+        if not(len(data['label'])):
         q_feat   = torch.load(os.path.join( self.config.language_embeddings_folder, self.config.language_model_name, f'{q_id}.pt' ))
         img_feat = torch.load(os.path.join( self.config.vision_embeddings_folder, self.config.vision_model_name, f'{img_id}.pt' ))
-        label = data['labels'][0]
+        try:
+            label = data['labels'][0]
+        except:
+            label = data['labels']
 
         return img_feat.to(self.config.device), q_feat.to(self.config.device), torch.tensor(label, dtype=torch.long).to(self.config.device)
