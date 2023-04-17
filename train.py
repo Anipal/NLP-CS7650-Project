@@ -27,8 +27,10 @@ config.device = torch.device('cuda') if torch.cuda.is_available() else torch.dev
 #dataset
 train_ds = VQADataset(config, type = "train")
 val_ds = VQADataset(config, type = "val")
+test_ds = VQADataset(config, type = "test")
+
 train_dataloader = DataLoader(train_ds, batch_size=128, shuffle=True)
-val_dataloader = DataLoader(val_ds, batch_size=128, shuffle=False)
+val_dataloader = DataLoader(test_ds, batch_size=128, shuffle=False)
 
 # model and optimizer -- add these to config to run experiments easily
 model = SimpleClassifier().to(config.device)
@@ -49,7 +51,7 @@ for epoch in range(num_epochs):
     predictedLabelsList = []
     model.train()
     for i, data in enumerate(train_dataloader, 0):
-        inputImg, inputTxt, labels = data
+        inputImg, inputTxt, labels , idx= data
 
         optimizer.zero_grad()
 
@@ -65,6 +67,9 @@ for epoch in range(num_epochs):
         
         predictedLabelsList.extend(list(outputLabels.detach().cpu().numpy()))
         gtLabelsList.extend(list(labels.detach().cpu().numpy()))
+
+    # print("pred",predictedLabelsList )
+    # print("Gt" , gtLabelsList)
 
     f1_train = f1_score(predictedLabelsList, gtLabelsList, average = 'weighted')
     accuracy_train = accuracy_score(predictedLabelsList, gtLabelsList)
@@ -88,12 +93,14 @@ for epoch in range(num_epochs):
         model.eval()
         with torch.no_grad():
             for i, data in enumerate(val_dataloader, 0):
-                inputImg, inputTxt, labels = data
+                inputImg, inputTxt, labels , idx= data
+
+                # print(labels)
 
                 outputs = model(inputImg, inputTxt).squeeze()
                 outputLabels = torch.argmax(outputs, dim=1)
-                loss_val = criterion(outputs, labels)
-                running_loss_val += loss_val.item()
+                # loss_val = criterion(outputs, labels)
+                # running_loss_val += loss_val.item()
                 predictedLabelsList.extend(list(outputLabels.detach().cpu().numpy()))
                 gtLabelsList.extend(list(labels.detach().cpu().numpy()))
 
@@ -103,7 +110,7 @@ for epoch in range(num_epochs):
 
             
             if(accuracy_val > best_acc_val):
-            
+        
                 best_acc_val = accuracy_val
                 torch.save({
                     'epoch': epoch,

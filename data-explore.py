@@ -32,14 +32,15 @@ data_test_with_dropped_datapoints = []
 count = 0
 for i in range(451):
   if i%20==0:
-      print(i)
-      print(data_test[i])
-      print(data_test_qs[i])
+      pass
+    #   print(i)
+    #   print(data_test[i])
+    #   print(data_test_qs[i])
   if(len(data_test[i]['labels'])!=1):
     count += 1
-    print("NO LABEL", i)
-    print(data_test[i])
-    print(data_test_qs[i])
+    # print("NO LABEL", i)
+    # print(data_test[i])
+    # print(data_test_qs[i])
 
   else:
     data_test_with_dropped_datapoints.append(data_test[i])
@@ -61,3 +62,4 @@ with open('data/cache/trainval_ans2label.pkl', 'rb') as f:
 
 # This basically maps the answer type to an index for e.g 'yes':0
 print('Total classes', len(label_train.keys()))
+print(label_train.keys())

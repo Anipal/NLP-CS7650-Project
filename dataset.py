@@ -34,4 +34,4 @@ class VQADataset(Dataset):
         except:
             label = -1
 
-        return img_feat.to(self.config.device), q_feat.to(self.config.device), torch.tensor(label, dtype=torch.long).to(self.config.device)
+        return img_feat.to(self.config.device), q_feat.to(self.config.device), torch.tensor(label, dtype=torch.long).to(self.config.device) , idx

@@ -31,8 +31,8 @@ test_dataloader = DataLoader(test_ds, batch_size=1, shuffle=False)
 model = SimpleClassifier().to(config.device)
 # setup logging and the results directory for the current run
 writer, best_model_path = setup_logging(config)
-checkpoint = torch.load(best_model_path)
-model.load_state_dict(checkpoint['model_state_dict'])
+# checkpoint = torch.load(best_model_path)
+# model.load_state_dict(checkpoint['model_state_dict'])
 
 
 # yet to edit after this

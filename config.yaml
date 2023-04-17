@@ -12,4 +12,4 @@ language_model_name : "bert-base-uncased"
 vision_model_name : "convnext_base"
 experiment_name: "baseline"
 run_id: 0
-epochs: 100
+epochs: 5
