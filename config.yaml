@@ -1,0 +1,15 @@
+train : "./data/trainset.json"
+test  : "./data/testset.json"
+train_dataloader : "./data/cache/train.pkl"
+val_dataloader : "./data/cache/val.pkl"
+test_dataloader  : "./data/cache/test_target.pkl"
+images           : "./data/images"
+language_embeddings_folder : "./embeddings/language"
+vision_embeddings_folder: "./embeddings/vision"
+results_folder : "./results"
+# parameters that can be changed
+language_model_name : "bert-base-uncased"
+vision_model_name : "convnext_base"
+experiment_name: "baseline"
+run_id: 0
+epochs: 100
